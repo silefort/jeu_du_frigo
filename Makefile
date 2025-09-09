@@ -8,7 +8,7 @@ build:
 	docker build -t $(IMAGE_NAME) .
 
 # Lancer le conteneur en arrière-plan
-run:
+run: stop
 	docker run -d --rm --name $(CONTAINER_NAME) -p $(PORT):5000 $(IMAGE_NAME)
 
 # Arrêter le conteneur
