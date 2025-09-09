@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>🎮 Jeu du Frigo ❄️</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: #f0f8ff;
+      color: #222;
+      text-align: center;
+      padding: 30px;
+    }
+
+    h1 { font-size: 3rem; margin-bottom: 0.2em; }
+    p { font-size: 1.3rem; margin: 0.4em 0; }
+
+    .message {
+      margin: 15px auto;
+      font-weight: bold;
+      font-size: 1.4rem;
+      padding: 10px 15px;
+      border-radius: 8px;
+      max-width: 500px;
+    }
+    .won { background: #d4edda; color: #155724; border: 2px solid #c3e6cb; }
+    .lost { background: #f8d7da; color: #721c24; border: 2px solid #f5c6cb; }
+
+    input[type=number] {
+      padding: 8px;
+      font-size: 1.2rem;
+      width: 120px;
+      text-align: center;
+    }
+    button {
+      margin-top: 10px;
+      padding: 10px 20px;
+      font-size: 1.2rem;
+      background: #007bff;
+      border: none;
+      border-radius: 6px;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover { background: #0056b3; }
+
+    table {
+      margin: 30px auto;
+      border-collapse: collapse;
+      width: 80%;
+      max-width: 600px;
+      font-size: 1rem;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+    }
+    th {
+      background: #007bff;
+      color: white;
+    }
+    tr:nth-child(even) { background: #f9f9f9; }
+  </style>
+</head>
+<body>
+  <h1>🎮 Jeu du Frigo ❄️</h1>
+
+  <form action="{{ url_for('reset') }}" method="get" style="margin-bottom: 20px;">
+    <button type="submit" style="background:#dc3545;">🔄 Recommencer</button>
+  </form>
+
+  <p>Température actuelle : <strong>{{ temp }} °C</strong></p>
+  <p>Tours restants : <strong>{{ attempts_left }} / {{ max_attempts }}</strong></p>
+
+  {% if message %}
+    <p class="message {% if 'gagné' in message or 'Bravo' in message %}won{% else %}lost{% endif %}">
+      {{ message }}
+    </p>
+  {% endif %}
+
+  {% if attempts_left > 0 %}
+    <form method="post">
+      <label for="input_value">Valeur du potentiomètre (0–200) :</label><br />
+      <input type="number" id="input_value" name="input_value" min="0" max="200" value="{{ input_value }}" required />
+      <br />
+      <button type="submit">Soumettre</button>
+    </form>
+  {% endif %}
+
+  {% if history %}
+    <h2>📊 Historique</h2>
+    <table>
+      <tr>
+        <th>Tour</th>
+        <th>Potentiomètre</th>
+        <th>Température</th>
+      </tr>
+      {% for move in history %}
+      <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ move.input }}</td>
+        <td>{{ move.temp }} °C</td>
+      </tr>
+      {% endfor %}
+    </table>
+  {% endif %}
+</body>
+</html>
